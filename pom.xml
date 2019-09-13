@@ -96,6 +96,19 @@
       <artifactId>hibernate-validator</artifactId>
       <version>6.0.16.Final</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.sun.faces/jsf-api -->
+    <dependency>
+      <groupId>com.sun.faces</groupId>
+      <artifactId>jsf-api</artifactId>
+      <version>2.2.20</version>
+    </dependency>
+
 
 
 
