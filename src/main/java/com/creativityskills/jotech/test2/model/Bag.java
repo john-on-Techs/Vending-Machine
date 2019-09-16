@@ -11,6 +11,10 @@ public class Bag<T> {
         return value == null ? 0 : value;
     }
 
+    public Map<T, Integer> getBag() {
+        return bag;
+    }
+
     public void add(T item){
         int count = bag.get(item);
         bag.put(item, count+1);
@@ -34,7 +38,5 @@ public class Bag<T> {
     public void put(T item, int quantity) {
         bag.put(item, quantity);
     }
-    public Map<T,Integer> getBag(){
-        return bag;
-    }
+
 }

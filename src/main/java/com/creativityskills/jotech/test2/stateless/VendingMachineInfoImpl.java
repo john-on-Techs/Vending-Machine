@@ -17,13 +17,7 @@ public class VendingMachineInfoImpl implements VendingMachineInfo {
 
     @Override
     public String display() {
-        final Map<Product,Integer> productMap = vendingMachine.getProductBag().getBag();
-        final StringBuilder builder = new StringBuilder();
-        for (Product product :productMap.keySet()){
-            builder.append(product);
-            builder.append(System.lineSeparator());
-        }
-        return builder.toString();
+return "";
 
     }
 }

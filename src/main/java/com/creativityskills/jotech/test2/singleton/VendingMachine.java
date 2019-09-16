@@ -38,6 +38,7 @@ public class VendingMachine {
         for (Coin coin : Coin.values()) {
             coinBag.put(coin, 5);
         }
+
     }
 
     @PreDestroy
@@ -71,21 +72,23 @@ public class VendingMachine {
     public Response<Product, List<Coin>> getServed() {
         Product product = null;
         try {
-            product = collectItem();
+            product = pickProduct();
         } catch (NotFullPaidException e) {
             e.printStackTrace();
         }
         totalSales = totalSales + currentPoduct.getPrice();
 
-        List<Coin> change = collectChange();
+        List<Coin> change = pickChange();
 
         return new Response<>(product, change);
     }
 
     @Lock(LockType.WRITE)
-    private Product collectItem() throws NotSufficientChangeException,
+    private Product pickProduct() throws NotSufficientChangeException,
             NotFullPaidException {
+        //check if user paid full amount
         if (isFullPaid()) {
+            //check if machine is able to give out change
             if (hasSufficientChange()) {
                 productBag.deduct(currentPoduct);
                 return currentPoduct;
@@ -93,14 +96,15 @@ public class VendingMachine {
             throw new NotSufficientChangeException("Not Sufficient change in coin bag");
 
         }
+        //user supplied less money
         long remainingBalance = currentPoduct.getPrice() - currentBalance;
         throw new NotFullPaidException("Price not full paid, remaining : ",
                 remainingBalance);
     }
 
-    private List<Coin> collectChange() {
+    private List<Coin> pickChange() {
         long changeAmount = currentBalance - currentPoduct.getPrice();
-        List<Coin> change = getChange(changeAmount);
+        List<Coin> change = calculateChange(changeAmount);
         updateCoinsInBag(change);
         currentBalance = 0;
         currentPoduct = null;
@@ -109,7 +113,7 @@ public class VendingMachine {
 
 
     public List<Coin> refund() {
-        List<Coin> refund = getChange(currentBalance);
+        List<Coin> refund = calculateChange(currentBalance);
         updateCoinsInBag(refund);
         currentBalance = 0;
         currentPoduct = null;
@@ -125,7 +129,7 @@ public class VendingMachine {
     }
 
 
-    private List<Coin> getChange(long amount) throws NotSufficientChangeException {
+    private List<Coin> calculateChange(long amount) throws NotSufficientChangeException {
         List<Coin> changes = Collections.EMPTY_LIST;
 
         if (amount > 0) {
@@ -175,7 +179,7 @@ public class VendingMachine {
     private boolean hasSufficientChangeForAmount(long amount) {
         boolean hasChange = true;
         try {
-            getChange(amount);
+            calculateChange(amount);
         } catch (NotSufficientChangeException e) {
             return hasChange = false;
         }
