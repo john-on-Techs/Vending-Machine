@@ -1,7 +1,7 @@
 package com.creativityskills.jotech.test2.model;
 
 public enum Product {
-    CANDY( 10), SNACK(50), NUTS(90), COKE(25), PEPSI(35), SODA(45);
+    CANDY( 10), COKE(25),   PEPSI(35), SODA(45),SNACK(50), NUTS(90);
     private int price;
 
     Product(int price) {
