@@ -87,32 +87,32 @@ public class VMBuyProduct implements VMBuyProductRemote {
                 Map<Money, Integer> change = calculateChangeI.calculateNumberOfEachTypeToReturn(balance);
 
                 int twoDollarNoteChange = 0;
-                if(change.get(Money.TWO_DOLLAR_NOTE)>0) {
+                if(change.get(Money.TWO_DOLLAR_NOTE)!= null) {
                     twoDollarNoteChange=change.get(Money.TWO_DOLLAR_NOTE);
                 }
                 int oneDollarNoteChange = 0;
-                if(change.get(Money.ONE_DOLLAR)>0) {
+                if(change.get(Money.ONE_DOLLAR)!= null) {
                     oneDollarNote=change.get(Money.ONE_DOLLAR);
                 }
                 int halfDollarChange = 0;
-                if(change.get(Money.HALF_DOLLAR)>0) {
+                if(change.get(Money.HALF_DOLLAR)!= null) {
                     halfDollarChange=change.get(Money.HALF_DOLLAR);
                 }
 
                 int quartersChange = 0;
-                if(change.get(Money.QUARTER)>0) {
+                if(change.get(Money.QUARTER)!= null) {
                     quartersChange=change.get(Money.QUARTER);
                 }
                 int dimesChange =0;
-                if( change.get(Money.DIME)>0){
+                if( change.get(Money.DIME)!= null){
                     dimesChange=  change.get(Money.DIME);
                 }
                 int nickelsChange = 0;
-                if(change.get(Money.NICKEL)>0){
+                if(change.get(Money.NICKEL)!= null){
                     change.get(Money.NICKEL);
                 }
                 int penniesChange = 0;
-                if(change.get(Money.PENNY)>0){
+                if(change.get(Money.PENNY)!= null){
                     penniesChange = change.get(Money.PENNY);
                 }
                 //deduct money from machine
