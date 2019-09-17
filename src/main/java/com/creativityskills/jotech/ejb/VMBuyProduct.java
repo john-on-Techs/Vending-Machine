@@ -130,7 +130,7 @@ public class VMBuyProduct implements VMBuyProductRemote {
                 throw new NotEnoughChangeException();
             }
         }
-        return "Product " + product + "purchased";
+        return "Product " + product + "purchased"+balance;
 
 
     }

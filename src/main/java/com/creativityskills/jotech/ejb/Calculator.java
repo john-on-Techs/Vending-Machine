@@ -45,7 +45,7 @@ public class Calculator implements CalculatorI {
                 if (balance >= Money.TWO_DOLLAR_NOTE.getDollars() && vendingMachine.getMoneys().get(Money.TWO_DOLLAR_NOTE) > 0) {
                     int count =0 ;
                     if(changes.get(Money.TWO_DOLLAR_NOTE) != null){
-                      count = changes.get(Money.ONE_DOLLAR);
+                      count = changes.get(Money.TWO_DOLLAR_NOTE);
                     }
                     changes.put(Money.TWO_DOLLAR_NOTE, count + 1);
                     balance = balance - Money.TWO_DOLLAR_NOTE.getDollars();

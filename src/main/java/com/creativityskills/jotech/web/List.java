@@ -36,7 +36,7 @@ public class List extends HttpServlet {
         userMoneyIntegerMap.put(Money.PENNY, Integer.parseInt(request.getParameter("PENNY")));
         Product product = Product.valueOf(request.getParameter("productChosen"));
         try {
-            vmBuyProductRemote.buyProduct(product,userMoneyIntegerMap);
+            System.out.println( vmBuyProductRemote.buyProduct(product,userMoneyIntegerMap));
         } catch (NoSuchProductExistsException | NotEnoughMoneyException | NotEnoughChangeException e) {
            throw  new ServletException("Some error occurred"+e);
         }
