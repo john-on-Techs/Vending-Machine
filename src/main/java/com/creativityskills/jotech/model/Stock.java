@@ -1,7 +1,7 @@
 package com.creativityskills.jotech.model;
 
 public class Stock {
-    private  long id;
+    private long id;
     private Product product;
     private long quantity;
 

@@ -3,9 +3,9 @@ package com.creativityskills.jotech.model;
 import java.math.BigDecimal;
 
 public class Product {
-  private long id;
-  private String name;
-  private BigDecimal unitPrice;
+    private long id;
+    private String name;
+    private BigDecimal unitPrice;
 
     public long getId() {
         return id;

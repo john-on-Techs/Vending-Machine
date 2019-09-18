@@ -1,9 +1,9 @@
 package com.creativityskills.jotech.model;
 
-public class Money {
+public class CashDrawer {
     private long id;
     private Denomination denomination;
-    private int count;
+    private long count;
 
     public long getId() {
         return id;
@@ -21,11 +21,11 @@ public class Money {
         this.denomination = denomination;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.count = count;
     }
 }

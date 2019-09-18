@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 
 @Local
 @Stateless
-public class SaleBean  implements  SaleBeanI{
+public class SaleBean implements SaleBeanI {
     @Override
     public boolean makeSale(Sale sale) {
         return false;
