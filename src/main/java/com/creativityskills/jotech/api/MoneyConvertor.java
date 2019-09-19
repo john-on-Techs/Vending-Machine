@@ -21,8 +21,7 @@ public class MoneyConvertor {
     @Path("/get-denominations/{amount}")
     public Response getDenominationsForMoney(@PathParam("amount") BigDecimal amount){
         Map m = moneyConvertorI.getDenominationsForMoney(amount);
-        Gson gson = new Gson();
-        return Response.ok().entity(gson.toJson(m)).build();
+        return Response.ok().entity(m).build();
     }
     @POST
     @Path("/get-money-value")

@@ -7,11 +7,13 @@ import com.creativityskills.jotech.model.Denomination;
 import com.creativityskills.jotech.model.Product;
 import com.creativityskills.jotech.model.Sale;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Local
@@ -25,6 +27,20 @@ public class VendingMachine implements VendingMachineI {
     private MoneyConvertorI moneyConvertorI;
     @EJB
     CashDrawerBeanI cashDrawerBeanI;
+
+    @PostConstruct
+    public void initialize() {
+        // check if money is there or initialize
+        for (Denomination denomination : Denomination.values()) {
+            CashDrawer cashDrawer = cashDrawerBeanI.findByDenomination(denomination);
+            if (cashDrawer == null) {
+                cashDrawer = new CashDrawer();
+                cashDrawer.setCount(10);
+                cashDrawer.setDenomination(denomination);
+                cashDrawerBeanI.update(cashDrawer);
+            }
+        }
+    }
 
     @Override
     public BigDecimal calculateRequiredAmount(Product product, int quantity) {
@@ -65,11 +81,19 @@ public class VendingMachine implements VendingMachineI {
         if (amount.compareTo(this.calculateRequiredAmount(product, quantity)) > 0) {
             status = status && !giveChange(amount.subtract(this.calculateRequiredAmount(product, quantity))).isEmpty();
         }
+        if (!status) {
+            this.refundCustomerMoney(denominations);
+        }
         return status;
     }
 
+    private void refundCustomerMoney(Map<Denomination, Integer> denominations) {        //dispense
+        System.out.println(denominations);
+    }
+
     private Map<Denomination, Integer> giveChange(BigDecimal amount) {
-        return moneyConvertorI.getDenominationsForMoney(amount);
+        Map<Denomination, Integer> map = moneyConvertorI.getDenominationsForMoney(amount);
+        return moneyConvertorI.getMoneyValueFromDenominations(map).equals(amount) ? map : new HashMap<Denomination, Integer>();
     }
 
 

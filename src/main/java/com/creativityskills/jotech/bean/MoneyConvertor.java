@@ -2,6 +2,7 @@ package com.creativityskills.jotech.bean;
 
 import com.creativityskills.jotech.model.Denomination;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.math.BigDecimal;
@@ -11,6 +12,8 @@ import java.util.Map;
 @Local
 @Stateless
 public class MoneyConvertor implements MoneyConvertorI {
+    @EJB
+    private CashDrawerBeanI cashDrawerBeanI;
     @Override
     public BigDecimal getMoneyValueFromDenominations(Map<Denomination, Integer> money) {
         BigDecimal amount = BigDecimal.ZERO;
@@ -41,9 +44,12 @@ public class MoneyConvertor implements MoneyConvertorI {
             double i = Double.parseDouble(amount.divide(new BigDecimal(denomination.getValue())).toString());
             i = Math.floor(i);
             denominationCount = (int) i;
-            return denominationCount;
+            int  availableDenominationCount = this.getAvailableCountForDenomination(denomination);
+            return Math.min(availableDenominationCount, denominationCount);
         }
         return 0;
     }
-
+    private int getAvailableCountForDenomination(Denomination denomination){
+        return (int) cashDrawerBeanI.findByDenomination(denomination).getCount();
+    }
 }

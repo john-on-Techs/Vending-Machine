@@ -25,4 +25,22 @@ public class Bean<T> implements BeanI<T> {
     public boolean delete(T t) {
         return false;
     }
+    private String generateSQLByOperation(T t,int operation){
+        String sql = "";
+        switch (operation){
+            case 1:
+                if(t instanceof CashDrawerBean){
+
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+        return sql;
+
+    }
 }
