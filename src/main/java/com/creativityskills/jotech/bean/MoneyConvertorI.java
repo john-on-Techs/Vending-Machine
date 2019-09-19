@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Local
 public interface MoneyConvertorI {
-    BigDecimal getMoneyValueromDenominations(Map<Denomination, Integer> money);
+    BigDecimal getMoneyValueFromDenominations(Map<Denomination, Integer> money);
 
     Map<Denomination, Integer> getDenominationsForMoney(BigDecimal amount);
 

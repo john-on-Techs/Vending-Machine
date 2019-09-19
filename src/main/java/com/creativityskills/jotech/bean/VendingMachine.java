@@ -10,13 +10,11 @@ import com.creativityskills.jotech.model.Sale;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
-import javax.ejb.Stateful;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
 @Local
-@Stateful
 @Singleton
 public class VendingMachine implements VendingMachineI {
     @EJB
@@ -36,7 +34,7 @@ public class VendingMachine implements VendingMachineI {
     @Override
     public boolean makeSale(Product product, int quantity, Map<Denomination, Integer> denominations) throws Exception {
         //convert money denominations to value
-        BigDecimal amount = moneyConvertorI.getMoneyValueromDenominations(denominations);
+        BigDecimal amount = moneyConvertorI.getMoneyValueFromDenominations(denominations);
 
         //check if the  amount supplied is enough to purchase the quantity
         if (amount.compareTo(this.calculateRequiredAmount(product, quantity)) < 0) {

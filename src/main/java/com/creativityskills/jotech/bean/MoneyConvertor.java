@@ -12,13 +12,13 @@ import java.util.Map;
 @Stateless
 public class MoneyConvertor implements MoneyConvertorI {
     @Override
-    public BigDecimal getMoneyValueromDenominations(Map<Denomination, Integer> money) {
+    public BigDecimal getMoneyValueFromDenominations(Map<Denomination, Integer> money) {
         BigDecimal amount = BigDecimal.ZERO;
         for (Map.Entry m : money.entrySet()) {
             Denomination denomination = Denomination.valueOf(m.getKey().toString());
             Integer count = (Integer) m.getValue();
-            double denominationValue = denomination.getValue() * count;
-            amount.add(new BigDecimal(denominationValue));
+            int denominationValue = denomination.getValue() * count;
+            amount =amount.add(new BigDecimal(denominationValue));
         }
         return amount;
     }
