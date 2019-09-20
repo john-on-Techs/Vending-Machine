@@ -1,11 +1,9 @@
 package com.creativityskills.jotech.bean;
 
 import com.creativityskills.jotech.db.DBHandler;
-import com.creativityskills.jotech.model.CashDrawer;
-import com.creativityskills.jotech.model.Product;
-import com.creativityskills.jotech.model.Sale;
-import com.creativityskills.jotech.model.Stock;
+import com.creativityskills.jotech.model.*;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,7 +15,9 @@ import java.sql.Statement;
 @Stateless
 public class Bean<T> implements BeanI<T> {
     @Inject
-    DBHandler dbHandler;
+    private DBHandler dbHandler;
+    @EJB
+    private ProductBeanI productBeanI;
 
     @Override
     public T create(T t) {
@@ -34,11 +34,16 @@ public class Bean<T> implements BeanI<T> {
 
         } else if (t instanceof Sale) {
             Sale sale = (Sale) t;
+
             sql = "INSERT INTO sale(date,product,quantity,amount)VALUES('" + sale.getDate() + "'," + sale.getProduct().getId() + "," + sale.getQuantity() + "," + sale.getAmount() + "  );";
 
         } else if (t instanceof Stock) {
             Stock stock = (Stock) t;
-            sql = "INSERT INTO stock(product,quantity)VALUES(" + stock.getProduct().getId() + "," + stock.getQuantity() + ")";
+            Product product = productBeanI.read(stock.getProduct());
+            if (product.equals(stock.getProduct())) {
+                sql = "INSERT INTO stock(product,quantity)VALUES(" + product.getId() + "," + stock.getQuantity() + ")";
+
+            }
 
         }
         try {
@@ -53,32 +58,66 @@ public class Bean<T> implements BeanI<T> {
     @Override
     public T read(T t) {
         String sql = null;
-
-        if (t instanceof CashDrawer) {
-            CashDrawer cashDrawer = (CashDrawer) t;
-            sql = "SELECT * FROM cash_drawer WHERE id=" + cashDrawer.getId();
-
-
-        } else if (t instanceof Product) {
-            Product product = (Product) t;
-            sql = "SELECT * FROM product WHERE id=" + product.getId();
-        } else if (t instanceof Sale) {
-            Sale sale = (Sale) t;
-            sql = "SELECT * FROM sale WHERE id=" + sale.getId();
-        } else if (t instanceof Stock) {
-            Stock stock = (Stock) t;
-            sql = "SELECT * FROM stock where id=" + stock.getId();
-        }
         try {
-            Statement stmt = dbHandler.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                return t;
+            if (t instanceof CashDrawer) {
+                CashDrawer cashDrawer = (CashDrawer) t;
+                sql = "SELECT * FROM cash_drawer WHERE id=" + cashDrawer.getId();
+                Statement stmt = dbHandler.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+
+                if (rs.next()) {
+
+                    cashDrawer.setId(rs.getInt("id"));
+                    cashDrawer.setDenomination(Denomination.valueOf(rs.getString("denomination")));
+                    cashDrawer.setCount(rs.getLong("dn_count"));
+                    return (T) cashDrawer;
+                }
+
+
+            } else if (t instanceof Product) {
+                Product product = (Product) t;
+                sql = "SELECT * FROM product WHERE id=" + product.getId();
+                Statement stmt = dbHandler.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+
+                    product.setId(rs.getInt("id"));
+                    product.setName(rs.getString("name"));
+                    product.setUnitPrice(rs.getBigDecimal("unit_price"));
+                    return (T) product;
+                }
+            } else if (t instanceof Sale) {
+                Sale sale = (Sale) t;
+                sql = "SELECT * FROM sale WHERE id=" + sale.getId();
+                Statement stmt = dbHandler.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    sale.setDate(rs.getDate("date"));
+                    Product product = new Product();
+                    product.setId(rs.getInt("product"));
+                    sale.setProduct(productBeanI.read(product));
+                    sale.setQuantity(rs.getLong("quantity"));
+                    sale.setAmount(rs.getBigDecimal("amount"));
+                    return (T) sale;
+                }
+            } else if (t instanceof Stock) {
+                Stock stock = (Stock) t;
+                sql = "SELECT * FROM stock where id=" + stock.getId();
+                Statement stmt = dbHandler.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    stock.setId(rs.getInt("id"));
+                    Product product = new Product();
+                    product.setId(rs.getInt("product"));
+                    stock.setProduct(productBeanI.read(product));
+                    stock.setQuantity(rs.getLong("quantity"));
+
+                    return (T) stock;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
 
         return t;
