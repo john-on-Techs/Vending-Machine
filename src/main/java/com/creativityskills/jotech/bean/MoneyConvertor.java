@@ -24,6 +24,7 @@ public class MoneyConvertor implements MoneyConvertorI {
             amount =amount.add(new BigDecimal(denominationValue));
         }
         return amount;
+
     }
 
     @Override

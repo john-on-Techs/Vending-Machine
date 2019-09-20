@@ -3,15 +3,15 @@ package com.creativityskills.jotech.model;
 import java.math.BigDecimal;
 
 public class Product {
-    private long id;
+    private int id;
     private String name;
     private BigDecimal unitPrice;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

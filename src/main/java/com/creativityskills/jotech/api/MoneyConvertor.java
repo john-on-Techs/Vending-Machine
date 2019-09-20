@@ -19,6 +19,8 @@ public class MoneyConvertor {
     private MoneyConvertorI moneyConvertorI;
     @GET
     @Path("/get-denominations/{amount}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getDenominationsForMoney(@PathParam("amount") BigDecimal amount){
         Map m = moneyConvertorI.getDenominationsForMoney(amount);
         return Response.ok().entity(m).build();

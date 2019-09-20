@@ -1,15 +1,15 @@
 package com.creativityskills.jotech.model;
 
 public class Stock {
-    private long id;
+    private int id;
     private Product product;
     private long quantity;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

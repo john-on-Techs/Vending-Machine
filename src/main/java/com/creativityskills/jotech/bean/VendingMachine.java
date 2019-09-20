@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,26 +19,29 @@ import java.util.Map;
 
 @Local
 @Singleton
+@Startup
 public class VendingMachine implements VendingMachineI {
     @EJB
     StockBeanI stockBeanI;
     @EJB
     SaleBeanI saleBeanI;
     @EJB
-    private MoneyConvertorI moneyConvertorI;
-    @EJB
     CashDrawerBeanI cashDrawerBeanI;
+    @EJB
+    private MoneyConvertorI moneyConvertorI;
 
     @PostConstruct
     public void initialize() {
         // check if money is there or initialize
+
         for (Denomination denomination : Denomination.values()) {
             CashDrawer cashDrawer = cashDrawerBeanI.findByDenomination(denomination);
             if (cashDrawer == null) {
                 cashDrawer = new CashDrawer();
                 cashDrawer.setCount(10);
                 cashDrawer.setDenomination(denomination);
-                cashDrawerBeanI.update(cashDrawer);
+                cashDrawerBeanI.create(cashDrawer);
+
             }
         }
     }
