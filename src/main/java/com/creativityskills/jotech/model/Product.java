@@ -1,7 +1,6 @@
 package com.creativityskills.jotech.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Product {
     private int id;

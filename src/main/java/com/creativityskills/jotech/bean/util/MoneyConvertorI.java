@@ -1,4 +1,4 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.util;
 
 import com.creativityskills.jotech.model.Denomination;
 

@@ -1,10 +1,10 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.stock;
 
+import com.creativityskills.jotech.bean.crud.BeanI;
 import com.creativityskills.jotech.model.Product;
 import com.creativityskills.jotech.model.Stock;
 
 import javax.ejb.Local;
-import javax.enterprise.inject.spi.Bean;
 
 @Local
 

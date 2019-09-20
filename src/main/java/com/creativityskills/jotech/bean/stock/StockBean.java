@@ -1,5 +1,7 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.stock;
 
+import com.creativityskills.jotech.bean.crud.Bean;
+import com.creativityskills.jotech.bean.product.ProductBeanI;
 import com.creativityskills.jotech.db.DBHandler;
 import com.creativityskills.jotech.model.Product;
 import com.creativityskills.jotech.model.Stock;

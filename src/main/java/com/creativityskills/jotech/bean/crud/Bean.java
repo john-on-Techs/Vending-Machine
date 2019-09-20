@@ -1,5 +1,6 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.crud;
 
+import com.creativityskills.jotech.bean.product.ProductBeanI;
 import com.creativityskills.jotech.db.DBHandler;
 import com.creativityskills.jotech.model.*;
 
@@ -22,7 +23,7 @@ public class Bean<T> implements BeanI<T> {
     @Override
     public T create(T t) {
         String sql = null;
-        Statement stmt = null;
+        Statement stmt;
         if (t instanceof CashDrawer) {
             CashDrawer cashDrawer = (CashDrawer) t;
             sql = "INSERT INTO cash_drawer(denomination,dn_count)VALUES('" + cashDrawer.getDenomination() + "'," + cashDrawer.getCount() + ");";
@@ -157,7 +158,7 @@ public class Bean<T> implements BeanI<T> {
     @Override
     public boolean delete(T t) {
         String sql = null;
-        Statement stmt = null;
+
         if (t instanceof CashDrawer) {
             CashDrawer cashDrawer = (CashDrawer) t;
             sql = "DELETE FROM cash_drawer WHERE id=" + cashDrawer.getId();
@@ -176,7 +177,7 @@ public class Bean<T> implements BeanI<T> {
 
         }
         try {
-            stmt = dbHandler.getConnection().createStatement();
+            Statement stmt = dbHandler.getConnection().createStatement();
             return stmt.executeUpdate(sql) > 0;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.util;
 
+import com.creativityskills.jotech.bean.cash.CashDrawerBeanI;
 import com.creativityskills.jotech.model.Denomination;
 
 import javax.ejb.EJB;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class MoneyConvertor implements MoneyConvertorI {
     @EJB
     private CashDrawerBeanI cashDrawerBeanI;
+
     @Override
     public BigDecimal getMoneyValueFromDenominations(Map<Denomination, Integer> money) {
         BigDecimal amount = BigDecimal.ZERO;
@@ -21,7 +23,7 @@ public class MoneyConvertor implements MoneyConvertorI {
             Denomination denomination = Denomination.valueOf(m.getKey().toString());
             Integer count = (Integer) m.getValue();
             int denominationValue = denomination.getValue() * count;
-            amount =amount.add(new BigDecimal(denominationValue));
+            amount = amount.add(new BigDecimal(denominationValue));
         }
         return amount;
 
@@ -45,12 +47,13 @@ public class MoneyConvertor implements MoneyConvertorI {
             double i = Double.parseDouble(amount.divide(new BigDecimal(denomination.getValue())).toString());
             i = Math.floor(i);
             denominationCount = (int) i;
-            int  availableDenominationCount = this.getAvailableCountForDenomination(denomination);
+            int availableDenominationCount = this.getAvailableCountForDenomination(denomination);
             return Math.min(availableDenominationCount, denominationCount);
         }
         return 0;
     }
-    private int getAvailableCountForDenomination(Denomination denomination){
+
+    private int getAvailableCountForDenomination(Denomination denomination) {
         return (int) cashDrawerBeanI.findByDenomination(denomination).getCount();
     }
 }

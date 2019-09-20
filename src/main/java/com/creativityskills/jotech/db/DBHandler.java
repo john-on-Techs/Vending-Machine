@@ -9,6 +9,7 @@ import java.sql.SQLException;
 public class DBHandler {
     @Resource(lookup = "java:/vmDS")
     private DataSource dataSource;
+
     @Produces
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();

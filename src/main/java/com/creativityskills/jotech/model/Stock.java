@@ -1,8 +1,5 @@
 package com.creativityskills.jotech.model;
 
-import javax.inject.Named;
-
-
 public class Stock {
     private int id;
     private Product product;

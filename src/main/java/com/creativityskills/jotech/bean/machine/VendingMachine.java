@@ -1,5 +1,9 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.machine;
 
+import com.creativityskills.jotech.bean.cash.CashDrawerBeanI;
+import com.creativityskills.jotech.bean.sale.SaleBeanI;
+import com.creativityskills.jotech.bean.stock.StockBeanI;
+import com.creativityskills.jotech.bean.util.MoneyConvertorI;
 import com.creativityskills.jotech.exception.InsufficientProductQuantityException;
 import com.creativityskills.jotech.exception.InsuficientAmountException;
 import com.creativityskills.jotech.model.CashDrawer;

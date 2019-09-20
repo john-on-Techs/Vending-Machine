@@ -1,5 +1,6 @@
-package com.creativityskills.jotech.bean;
+package com.creativityskills.jotech.bean.cash;
 
+import com.creativityskills.jotech.bean.crud.BeanI;
 import com.creativityskills.jotech.model.CashDrawer;
 import com.creativityskills.jotech.model.Denomination;
 
