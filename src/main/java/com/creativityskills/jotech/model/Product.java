@@ -39,4 +39,12 @@ public class Product {
         return id == product.id;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                '}';
+    }
 }

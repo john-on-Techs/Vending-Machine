@@ -5,8 +5,11 @@ import com.creativityskills.jotech.model.CashDrawer;
 import com.creativityskills.jotech.model.Denomination;
 
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface CashDrawerBeanI extends BeanI<CashDrawer> {
     CashDrawer findByDenomination(Denomination denomination);
+    List<CashDrawer> getCashDrawerList();
+
 }

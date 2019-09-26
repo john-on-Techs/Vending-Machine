@@ -28,4 +28,13 @@ public class CashDrawer {
     public void setCount(long count) {
         this.count = count;
     }
+
+    @Override
+    public String toString() {
+        return "CashDrawer{" +
+                "id=" + id +
+                ", denomination=" + denomination +
+                ", count=" + count +
+                '}';
+    }
 }

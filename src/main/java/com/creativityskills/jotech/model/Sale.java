@@ -49,4 +49,15 @@ public class Sale {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "id=" + id +
+                ", date=" + date +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                ", amount=" + amount +
+                '}';
+    }
 }

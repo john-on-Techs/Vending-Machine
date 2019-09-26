@@ -28,4 +28,13 @@ public class Stock {
     public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

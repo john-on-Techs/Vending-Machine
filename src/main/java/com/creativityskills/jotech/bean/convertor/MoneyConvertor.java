@@ -1,4 +1,4 @@
-package com.creativityskills.jotech.bean.util;
+package com.creativityskills.jotech.bean.convertor;
 
 import com.creativityskills.jotech.bean.cash.CashDrawerBeanI;
 import com.creativityskills.jotech.model.Denomination;

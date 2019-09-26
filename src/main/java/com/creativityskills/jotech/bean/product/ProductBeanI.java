@@ -9,6 +9,6 @@ import java.util.List;
 
 @Local
 public interface ProductBeanI extends BeanI<Product> {
-
+    List<Product> getProductsList();
 
 }

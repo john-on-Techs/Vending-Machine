@@ -1,13 +1,13 @@
 package com.creativityskills.jotech.bean.crud;
 
 import com.creativityskills.jotech.bean.product.ProductBeanI;
-import com.creativityskills.jotech.db.DBHandler;
 import com.creativityskills.jotech.model.*;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,7 +16,7 @@ import java.sql.Statement;
 @Stateless
 public class Bean<T> implements BeanI<T> {
     @Inject
-    private DBHandler dbHandler;
+    private Connection connection;
     @EJB
     private ProductBeanI productBeanI;
 
@@ -36,7 +36,7 @@ public class Bean<T> implements BeanI<T> {
         } else if (t instanceof Sale) {
             Sale sale = (Sale) t;
 
-            sql = "INSERT INTO sale(date,product,quantity,amount)VALUES('" + sale.getDate() + "'," + sale.getProduct().getId() + "," + sale.getQuantity() + "," + sale.getAmount() + "  );";
+            sql = "INSERT INTO sale(date,product,quantity,amount)VALUES(NOW()," + sale.getProduct().getId() + "," + sale.getQuantity() + "," + sale.getAmount() + "  );";
 
         } else if (t instanceof Stock) {
             Stock stock = (Stock) t;
@@ -48,7 +48,7 @@ public class Bean<T> implements BeanI<T> {
 
         }
         try {
-            stmt = dbHandler.getConnection().createStatement();
+            stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class Bean<T> implements BeanI<T> {
             if (t instanceof CashDrawer) {
                 CashDrawer cashDrawer = (CashDrawer) t;
                 sql = "SELECT * FROM cash_drawer WHERE id=" + cashDrawer.getId();
-                Statement stmt = dbHandler.getConnection().createStatement();
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
 
                 if (rs.next()) {
@@ -78,7 +78,7 @@ public class Bean<T> implements BeanI<T> {
             } else if (t instanceof Product) {
                 Product product = (Product) t;
                 sql = "SELECT * FROM product WHERE id=" + product.getId();
-                Statement stmt = dbHandler.getConnection().createStatement();
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
 
@@ -90,7 +90,7 @@ public class Bean<T> implements BeanI<T> {
             } else if (t instanceof Sale) {
                 Sale sale = (Sale) t;
                 sql = "SELECT * FROM sale WHERE id=" + sale.getId();
-                Statement stmt = dbHandler.getConnection().createStatement();
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     sale.setDate(rs.getDate("date"));
@@ -104,7 +104,7 @@ public class Bean<T> implements BeanI<T> {
             } else if (t instanceof Stock) {
                 Stock stock = (Stock) t;
                 sql = "SELECT * FROM stock where id=" + stock.getId();
-                Statement stmt = dbHandler.getConnection().createStatement();
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     stock.setId(rs.getInt("id"));
@@ -147,7 +147,7 @@ public class Bean<T> implements BeanI<T> {
 
         }
         try {
-            stmt = dbHandler.getConnection().createStatement();
+            stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,7 +177,7 @@ public class Bean<T> implements BeanI<T> {
 
         }
         try {
-            Statement stmt = dbHandler.getConnection().createStatement();
+            Statement stmt = connection.createStatement();
             return stmt.executeUpdate(sql) > 0;
         } catch (SQLException e) {
             e.printStackTrace();

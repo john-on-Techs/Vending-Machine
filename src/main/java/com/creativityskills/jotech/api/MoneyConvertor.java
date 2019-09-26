@@ -1,7 +1,10 @@
 package com.creativityskills.jotech.api;
 
-import com.creativityskills.jotech.bean.util.MoneyConvertorI;
+import com.creativityskills.jotech.bean.convertor.MoneyConvertorI;
+import com.creativityskills.jotech.bean.stock.StockBean;
+import com.creativityskills.jotech.bean.stock.StockBeanI;
 import com.creativityskills.jotech.model.Denomination;
+import com.creativityskills.jotech.model.Stock;
 import com.google.gson.Gson;
 
 import javax.ejb.EJB;
@@ -17,6 +20,7 @@ public class MoneyConvertor {
     @EJB
     private MoneyConvertorI moneyConvertorI;
 
+
     @GET
     @Path("/get-denominations/{amount}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -31,6 +35,7 @@ public class MoneyConvertor {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMoneyValueFromDenominations(String moneyMap) {
+
         System.out.println(moneyMap);
         Gson gson = new Gson();
         Map<String, Integer> m = gson.fromJson(moneyMap, Map.class);

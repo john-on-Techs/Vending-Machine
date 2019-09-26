@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DBHandler {
+public class Connect {
     @Resource(lookup = "java:/vmDS")
     private DataSource dataSource;
 

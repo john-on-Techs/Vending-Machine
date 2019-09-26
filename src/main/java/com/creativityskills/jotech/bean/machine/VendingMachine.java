@@ -1,15 +1,13 @@
 package com.creativityskills.jotech.bean.machine;
 
 import com.creativityskills.jotech.bean.cash.CashDrawerBeanI;
+import com.creativityskills.jotech.bean.convertor.MoneyConvertorI;
+import com.creativityskills.jotech.bean.product.ProductBeanI;
 import com.creativityskills.jotech.bean.sale.SaleBeanI;
 import com.creativityskills.jotech.bean.stock.StockBeanI;
-import com.creativityskills.jotech.bean.util.MoneyConvertorI;
 import com.creativityskills.jotech.exception.InsufficientProductQuantityException;
 import com.creativityskills.jotech.exception.InsuficientAmountException;
-import com.creativityskills.jotech.model.CashDrawer;
-import com.creativityskills.jotech.model.Denomination;
-import com.creativityskills.jotech.model.Product;
-import com.creativityskills.jotech.model.Sale;
+import com.creativityskills.jotech.model.*;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,6 +28,8 @@ public class VendingMachine implements VendingMachineI {
     @EJB
     SaleBeanI saleBeanI;
     @EJB
+    private ProductBeanI productBeanI;
+    @EJB
     CashDrawerBeanI cashDrawerBeanI;
     @EJB
     private MoneyConvertorI moneyConvertorI;
@@ -40,7 +40,7 @@ public class VendingMachine implements VendingMachineI {
 
         for (Denomination denomination : Denomination.values()) {
             CashDrawer cashDrawer = cashDrawerBeanI.findByDenomination(denomination);
-            if (cashDrawer == null) {
+            if (cashDrawer ==null) {
                 cashDrawer = new CashDrawer();
                 cashDrawer.setCount(10);
                 cashDrawer.setDenomination(denomination);
@@ -57,18 +57,6 @@ public class VendingMachine implements VendingMachineI {
 
     @Override
     public boolean makeSale(Product product, int quantity, Map<Denomination, Integer> denominations) throws Exception {
-        //convert money denominations to value
-        BigDecimal amount = moneyConvertorI.getMoneyValueFromDenominations(denominations);
-
-        //check if the  amount supplied is enough to purchase the quantity
-        if (amount.compareTo(this.calculateRequiredAmount(product, quantity)) < 0) {
-            throw new InsuficientAmountException();
-        }
-        //check if the quantity required is available in stock
-        if (stockBeanI.getStockBalance(product) < quantity) {
-            throw new InsufficientProductQuantityException();
-        }
-
         //add denominations supplied to the VM cash drawer
         for (Map.Entry m : denominations.entrySet()) {
             Denomination denomination = Denomination.valueOf(m.getKey().toString());
@@ -77,26 +65,56 @@ public class VendingMachine implements VendingMachineI {
             //update the denomination in the VM's cashdrawer
             cashDrawerBeanI.update(cashDrawer);
         }
+        //convert money denominations to value
+        BigDecimal userAmount = moneyConvertorI.getMoneyValueFromDenominations(denominations);
+        BigDecimal requiredAmount = this.calculateRequiredAmount(product, quantity);
+        BigDecimal balance = userAmount.subtract(requiredAmount);
+
+        //check if the  amount supplied is enough to purchase the quantity
+
+
+        if (userAmount.compareTo(requiredAmount) < 0) {
+            dispenseMoney(denominations);
+            throw new InsuficientAmountException();
+        }
+        //check if the quantity required is available in stock
+        if (stockBeanI.getStockBalance(product) < quantity) {
+            dispenseMoney(denominations);
+            throw new InsufficientProductQuantityException();
+        }
+
+
         //create sale object representation
         Sale sale = new Sale();
         sale.setDate(new Date());
-        sale.setAmount(this.calculateRequiredAmount(product, quantity));
+        sale.setAmount(requiredAmount);
         sale.setProduct(product);
         sale.setQuantity(quantity);
-        //persist sale to db
-        boolean status = saleBeanI.makeSale(sale);
-        //check if the customer is to be given change
-        if (amount.compareTo(this.calculateRequiredAmount(product, quantity)) > 0) {
-            status = status && !giveChange(amount.subtract(this.calculateRequiredAmount(product, quantity))).isEmpty();
+
+        //if we are to give change and we can give change
+        if (userAmount.compareTo(requiredAmount) > 0 && !giveChange(balance).isEmpty()) {
+            //then we give change and continue
+
+            dispenseMoney(giveChange(balance));
         }
-        if (!status) {
-            this.refundCustomerMoney(denominations);
-        }
-        return status;
+        // record the sale transaction to db
+        saleBeanI.create(sale);
+        //sale made successfully
+        //update stock of the product by reducing the quantity
+        Stock stock = stockBeanI.getStockForProduct(product);
+        stock.setQuantity(stock.getQuantity() - quantity);
+        stockBeanI.update(stock);
+        return true;
     }
 
-    private void refundCustomerMoney(Map<Denomination, Integer> denominations) {        //dispense
-        System.out.println(denominations);
+    private void dispenseMoney(Map<Denomination, Integer> denominations) {
+        for (Map.Entry m : denominations.entrySet()) {
+            Denomination denomination = Denomination.valueOf(m.getKey().toString());
+            CashDrawer cashDrawer = cashDrawerBeanI.findByDenomination(denomination);
+            cashDrawer.setCount(cashDrawer.getCount() - (Integer) m.getValue());
+            //update the denomination in the VM's cashdrawer
+            cashDrawerBeanI.update(cashDrawer);
+        }
     }
 
     private Map<Denomination, Integer> giveChange(BigDecimal amount) {
